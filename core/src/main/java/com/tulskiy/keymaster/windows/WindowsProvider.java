@@ -16,7 +16,6 @@ public class WindowsProvider extends Provider implements WinUser.HOOKPROC {
   private static final Set<Integer> pressedKeys = new HashSet<>();
   public List<HotKey> hotKeys = new ArrayList<>();
   HashMap<Object, Integer> hotKeyMap = new HashMap<>();
-  int idSeq = 0;
   boolean running;
   boolean hotkeyPressed;
 
@@ -39,14 +38,14 @@ public class WindowsProvider extends Provider implements WinUser.HOOKPROC {
   public void register(KeyStroke keyCode, HotKeyListener listener) {
     HotKey hotKey = new HotKey(keyCode, listener);
     hotKeys.add(hotKey);
-    hotKeyMap.put(hotKey.keyStroke, idSeq++);
+    hotKeyMap.put(hotKey.keyStroke, hotKeyMap.size());
   }
 
   @Override
   public void register(MediaKey mediaKey, HotKeyListener listener) {
     HotKey hotKey = new HotKey(mediaKey, listener);
     hotKeys.add(hotKey);
-    hotKeyMap.put(hotKey.mediaKey, idSeq++);
+    hotKeyMap.put(hotKey.mediaKey, hotKeyMap.size());
   }
 
   @Override
@@ -64,6 +63,7 @@ public class WindowsProvider extends Provider implements WinUser.HOOKPROC {
   }
 
   private final LowLevelKeyboardProc keyboardHook = new LowLevelKeyboardProc() {
+    @Override
     public WinDef.LRESULT callback(int nCode, WinDef.WPARAM wParam, WinUser.KBDLLHOOKSTRUCT info) {
         if (nCode >= 0) {
           int vkCode = info.vkCode;
