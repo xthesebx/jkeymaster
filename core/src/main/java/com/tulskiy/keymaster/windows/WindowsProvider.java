@@ -38,14 +38,14 @@ public class WindowsProvider extends Provider implements WinUser.HOOKPROC {
   public void register(KeyStroke keyCode, HotKeyListener listener) {
     HotKey hotKey = new HotKey(keyCode, listener);
     hotKeys.add(hotKey);
-    hotKeyMap.put(hotKey.keyStroke, hotKeyMap.size());
+    hotKeyMap.put(hotKey.keyStroke, hotKeys.size());
   }
 
   @Override
   public void register(MediaKey mediaKey, HotKeyListener listener) {
     HotKey hotKey = new HotKey(mediaKey, listener);
     hotKeys.add(hotKey);
-    hotKeyMap.put(hotKey.mediaKey, hotKeyMap.size());
+    hotKeyMap.put(hotKey.mediaKey, hotKeys.size());
   }
 
   @Override
