@@ -15,7 +15,6 @@ public class WindowsProvider extends Provider implements WinUser.HOOKPROC {
   private static final User32 USER32 = User32.INSTANCE;
   private static final Set<Integer> pressedKeys = new HashSet<>();
   public List<HotKey> hotKeys = new ArrayList<>();
-  HashMap<Object, Integer> hotKeyMap = new HashMap<>();
   boolean running;
   boolean hotkeyPressed;
 
@@ -38,24 +37,22 @@ public class WindowsProvider extends Provider implements WinUser.HOOKPROC {
   public void register(KeyStroke keyCode, HotKeyListener listener) {
     HotKey hotKey = new HotKey(keyCode, listener);
     hotKeys.add(hotKey);
-    hotKeyMap.put(hotKey.keyStroke, hotKeys.size());
   }
 
   @Override
   public void register(MediaKey mediaKey, HotKeyListener listener) {
     HotKey hotKey = new HotKey(mediaKey, listener);
     hotKeys.add(hotKey);
-    hotKeyMap.put(hotKey.mediaKey, hotKeys.size());
   }
 
   @Override
   public void unregister(KeyStroke keyCode) {
-    hotKeys.remove((int) hotKeyMap.get(keyCode));
+    hotKeys.remove(hotKeys.stream().filter(key -> key.keyStroke == keyCode).findFirst().get());
   }
 
   @Override
   public void unregister(MediaKey mediaKey) {
-    hotKeys.remove((int) hotKeyMap.get(mediaKey));
+    hotKeys.remove(hotKeys.stream().filter(key -> key.mediaKey == mediaKey).findFirst().get());
   }
 
   public interface LowLevelKeyboardProc extends WinUser.HOOKPROC {
